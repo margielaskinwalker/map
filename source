@@ -1,0 +1,119 @@
+#include<iostream>
+#include<SFML/Graphics.hpp>
+#include<ctime>
+using namespace std;
+
+int dungeon[50][50];
+enum dir {
+	up = 0, down = 1, Left = 2, Right = 3
+};
+void waker();
+bool enter = false;
+int main() {
+	srand(time(NULL));
+	sf::RenderWindow screen(sf::VideoMode(800, 800), "map");
+	bool running = true;
+	sf::RectangleShape rect;
+	rect.setPosition(sf::Vector2f(0, 0));
+	rect.setSize(sf::Vector2f(16, 16));
+
+	for (int i = 0; i < 50; i++) {
+		for (int j = 0; j < 50; j++) {
+			dungeon[i][j] = rand() % 4;
+		}
+	}
+	for (int i = 0; i < 50; i++) {
+		for (int j = 0; j < 50; j++) {
+			cout << dungeon[i][j];
+		}
+		cout << endl;
+	}
+	while (running) {
+		sf::Event event;
+		while (screen.pollEvent(event)) {
+			if (event.type == sf::Event::Closed)
+				running = false;
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+			for (int i = 0; i < 50; i++) {
+				for (int j = 0; j < 50; j++) {
+					dungeon[i][j] = rand() % 4;
+				}
+			}
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
+			enter = true;
+		}
+		if (enter == true && !sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
+			waker();
+			enter = false;
+		}
+
+		screen.clear(sf::Color(0, 0, 0));
+		for (int i = 0; i < 50; i++) {
+			for (int j = 0; j < 50; j++) {
+				if (dungeon[i][j] == 0) {
+					rect.setFillColor(sf::Color(0, 0, 0));
+					rect.setPosition(sf::Vector2f(i * 16, j * 16));
+					screen.draw(rect);
+				}
+				if (dungeon[i][j] == 1) {
+					rect.setFillColor(sf::Color(255, 0, 127));
+					rect.setPosition(sf::Vector2f(i * 16, j * 16));
+					screen.draw(rect);
+				}
+				if (dungeon[i][j] == 2) {
+					rect.setFillColor(sf::Color(57, 255, 20));
+					rect.setPosition(sf::Vector2f(i * 16, j * 16));
+					screen.draw(rect);
+				}
+				if (dungeon[i][j] == 3) {
+					rect.setFillColor(sf::Color(155, 103, 60));
+					rect.setPosition(sf::Vector2f(i * 16, j * 16));
+					screen.draw(rect);
+				}
+
+
+			}
+		}
+		screen.display();
+	}
+	cout << endl << endl;
+	waker();
+	
+}
+void waker() {
+	int x = 25;
+	int y =25;
+	
+	int direction = up;
+
+	while (x < 50 && x > 0 && y < 50 && y > 0) {
+		direction = rand() % 4;
+
+		if (direction == up) {
+			y -= 1;
+			dungeon[x][y] = 0;
+		}
+		if (direction == down) {
+			y += 1;
+			dungeon[x][y] = 0;
+		}
+		if (direction == Left) {
+			x -= 1;
+			dungeon[x][y] = 0;
+		}
+		if (direction == Right) {
+			x += 1;
+			dungeon[x][y] = 0;
+		}
+	}
+	for (int i = 0; i < 50; i++) {
+		for (int j = 0; j < 50; j++) {
+			cout << dungeon[i][j];
+		}
+		cout << endl;
+	}
+	return;
+	
+}
